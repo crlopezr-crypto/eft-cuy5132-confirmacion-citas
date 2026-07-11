@@ -87,10 +87,13 @@ Nunca se debe hardcodear esta clave en el código fuente.
 
 Instrucciones detalladas paso a paso en el informe técnico entregado junto a este repositorio.
 
-## Autor
+## Autores
 
 Cristopher López — Ingeniería en Conectividad y Redes, Duoc UC
+Kenyer Sandoval — Ingeniería en Conectividad y Redes, Duoc UC
+Javier Valenzuela — Ingeniería en Conectividad y Redes, Duoc UC
+Marcos Necul — Ingeniería en Conectividad y Redes, Duoc UC
 
 ## Declaración de uso de IA
 
-Este proyecto fue desarrollado con apoyo de Claude (Anthropic) como asistente técnico para configuración, diagnóstico de errores y documentación. Todas las implementaciones y pruebas fueron ejecutadas por el autor sobre su propia infraestructura.
+Este proyecto fue desarrollado con apoyo de Claude (Anthropic) como asistente técnico para configuración, diagnóstico de errores y documentación. Todas las implementaciones y pruebas fueron ejecutadas por los autores sobre su propia infraestructura.
