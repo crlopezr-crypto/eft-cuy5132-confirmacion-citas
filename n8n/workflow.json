@@ -1,0 +1,206 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0BFVNW7VBK",
+          "mode": "list",
+          "cachedResultName": "nuevo-canal"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a7b84399-440c-41af-9580-828579302ada",
+      "name": "Slack Trigger",
+      "webhookId": "31f657f0-6db7-436c-8e32-abdb5af68d7c",
+      "credentials": {
+        "slackApi": {
+          "id": "TLIBJv867UmkmDuu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const texto = $input.first().json.text || \"\";\nconst match = texto.match(/(\\d{3,5})\\s*$/);\nconst anexo = match ? match[1] : null;\n\nreturn [{\n  json: {\n    anexo: anexo,\n    mensajeOriginal: texto,\n    canal: $input.first().json.channel\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        0
+      ],
+      "id": "87360509-3af0-4d0b-9685-178378de62d6",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "https://script.google.com/macros/s/AKfycbwzNSF6IkAu4mguGURAnpNxSOK5xJL-UoobH_KfZoXwhjSLd15tN4b8PU-bj4zK8ICY/exec",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={\n  \"action\": \"getCita\",\n  \"extension\": \"{{ $json.anexo.toString().trim() }}\"\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          },
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        400,
+        0
+      ],
+      "id": "b55759b6-09b8-4492-8cd9-94983c929967",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=El usuario preguntó: {{ $('Code in JavaScript').item.json.mensajeOriginal }}\n\nDatos de la cita encontrados en el sistema:\nPaciente: {{ $json.paciente }}\nEspecialidad: {{ $json.especialidad }}\nFecha: {{ $json.fecha }}\nHora: {{ $json.hora }}\nEstado actual: {{ $json.estado }}\n\nRedacta una respuesta breve y clara para el paciente confirmando estos datos de su cita médica, en un tono amable y profesional.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        608,
+        0
+      ],
+      "id": "568b9b7c-7075-4ac1-b687-b46e55a2fa91",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0BFVNW7VBK",
+          "mode": "list",
+          "cachedResultName": "nuevo-canal"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        960,
+        0
+      ],
+      "id": "828f1aa0-4e28-4f5f-9a1d-00ff9d12edaa",
+      "name": "Send a message",
+      "webhookId": "99890aa7-34e1-48a0-90ff-2208b635bdae",
+      "credentials": {
+        "slackApi": {
+          "id": "TLIBJv867UmkmDuu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openrouter/free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        608,
+        208
+      ],
+      "id": "a1fcda00-1691-43f0-8547-903cba3fb98f",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "mEWvgW0yyabDXKvh",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "463d2910-a6bd-4346-8254-cda4a1624f78",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ef7ed0ac603bc80dea23c4e20076d2f8bd8c4ce1a783d67efe301d8c38821693"
+  },
+  "nodeGroups": [],
+  "id": "b6a7r1TDiEb2uBvB",
+  "tags": []
+}
