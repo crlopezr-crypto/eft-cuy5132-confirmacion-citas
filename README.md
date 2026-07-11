@@ -90,8 +90,11 @@ Instrucciones detalladas paso a paso en el informe técnico entregado junto a es
 ## Autores
 
 Cristopher López — Ingeniería en Conectividad y Redes, Duoc UC
+
 Kenyer Sandoval — Ingeniería en Conectividad y Redes, Duoc UC
+
 Javier Valenzuela — Ingeniería en Conectividad y Redes, Duoc UC
+
 Marcos Necul — Ingeniería en Conectividad y Redes, Duoc UC
 
 ## Declaración de uso de IA
